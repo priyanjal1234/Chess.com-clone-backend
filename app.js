@@ -62,18 +62,24 @@ io.on("connection", function (socket) {
   });
 
   socket.on("move", function ({ gameId, move }) {
+  try {
     const gameInstance = gameInstances[gameId];
     if (gameInstance) {
       const result = gameInstance.makeMove(move, socket.id);
 
-      if (result.error) {
-        const gameState = gameInstance.getGameState()
-        socket.emit("invalid-move", {error: result.error,fen: gameState});
-      } else {
+      if (!result.error) {
         io.to(gameId).emit("game-state", result.fen);
       }
+      else {
+        console.log("Invalid Move", result.error)
+        socket.emit("invalid-move",result.error)
+      }
     }
-  });
+  } catch (error) {
+    console.log(error)
+  }
+});
+
 
   socket.on("disconnect", async function () {
     console.log(`Disconnected ${socket.id}`);
