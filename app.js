@@ -72,8 +72,25 @@ io.on("connection", function (socket) {
     }
   });
 
-  socket.on("disconnect", function () {
+  socket.on("disconnect", async function () {
     console.log(`Disconnected ${socket.id}`);
+    // Check if the socket was in a game
+    const gameId = socket.gameId;
+    if (gameId) {
+      try {
+        
+        await gameModel.findByIdAndDelete(gameId);
+        console.log(`Game ${gameId} deleted from database.`);
+      } catch (error) {
+        console.error(`Error deleting game ${gameId} from database:`, error);
+      }
+     
+      delete gameInstances[gameId];
+     
+      io.to(gameId).emit("game-ended", {
+        message: "Game ended due to player disconnection.",
+      });
+    }
   });
 });
 
