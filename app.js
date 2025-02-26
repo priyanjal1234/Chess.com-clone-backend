@@ -7,6 +7,8 @@ import { Server } from "socket.io";
 import cors from "cors";
 import db from "./db/index.js";
 
+import gameModel from './models/game.model.js'
+
 const app = express();
 
 const server = http.createServer(app);
