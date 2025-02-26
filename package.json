@@ -4,7 +4,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon app.js"
+     "install-backend": "npm install",
+    "run-backend": "node app.js"
   },
   "keywords": [],
   "author": "",
