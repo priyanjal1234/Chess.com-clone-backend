@@ -67,7 +67,8 @@ io.on("connection", function (socket) {
       const result = gameInstance.makeMove(move, socket.id);
 
       if (result.error) {
-        socket.emit("invalid-move", result.error);
+        const gameState = gameInstance.getGameState()
+        socket.emit("invalid-move", {error: result.error,fen: gameState});
       } else {
         io.to(gameId).emit("game-state", result.fen);
       }
